@@ -163,6 +163,8 @@ for field in SCHEMA.keys():
         print(os.path.join(OUTPUT_HOME, PATTERN, field, website_name) + f'_{PATTERN}.json')
         if (website_name in filter_website) or (not overwrite and os.path.exists(os.path.join(OUTPUT_HOME, PATTERN, field, website_name) + f'_{PATTERN}.json')):
             continue
+        if website_name != "movie-yahoo":
+            continue
 
         if dataset in ['swde', 'extended_swde', 'ds1']:
             webpage_list = glob.glob(os.path.join(website_path, '*'))
