@@ -1,5 +1,5 @@
 import sys
-sys.setrecursionlimit(3000)
+sys.setrecursionlimit(10000)
 from bs4 import BeautifulSoup
 from lxml import etree
 from lxml.etree import _Element

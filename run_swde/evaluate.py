@@ -1,7 +1,13 @@
 import json
 import glob, os, re
 from collections import defaultdict
-import argparse 
+import argparse
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BASE_DIR=os.getenv('BASE_DIR')
 
 parser = argparse.ArgumentParser()
 
@@ -9,14 +15,14 @@ parser.add_argument('--pattern', type=str, choices=['cot', 'reflexion', 'autocra
 parser.add_argument('--model', type=str, help='Backbone model')
 
 SCHEMA = {
-    'auto': ['model', 'price', 'engine', 'fuel_economy'],
-    'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
-    'camera': ['model', 'price', 'manufacturer'],
-    'job': ['title', 'company', 'location', 'date_posted'],
+    # 'auto': ['model', 'price', 'engine', 'fuel_economy'],
+    # 'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
+    # 'camera': ['model', 'price', 'manufacturer'],
+    # 'job': ['title', 'company', 'location', 'date_posted'],
     'movie': ['title', 'director', 'genre', 'mpaa_rating'],
-    'nbaplayer': ['name', 'team', 'height', 'weight'],
-    'restaurant': ['name', 'address', 'phone', 'cuisine'],
-    'university': ['name', 'phone', 'website', 'type']
+    # 'nbaplayer': ['name', 'team', 'height', 'weight'],
+    # 'restaurant': ['name', 'address', 'phone', 'cuisine'],
+    # 'university': ['name', 'phone', 'website', 'type']
 }
 
 args = parser.parse_args()
@@ -25,8 +31,8 @@ print(args)
 PATTERN = args.pattern
 model = args.model
 
-GROUND_TRUTH_HOME = '/mnt/data122/harryhuang/swde/sourceCode/groundtruth'
-OUTPUT_HOME = f'dataset/swde/{model}/{PATTERN}'
+GROUND_TRUTH_HOME = os.path.join(BASE_DIR, 'data/swde/sourceCode/groundtruth')
+OUTPUT_HOME = os.path.join(BASE_DIR, f'/dataset/swde/{model}/{PATTERN}')
 
 def load_file(filename):
     result_dict = {}

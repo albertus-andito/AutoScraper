@@ -294,7 +294,8 @@ class StepbackCrawler:
             query = synthesis_prompt.format(instruction, json.dumps(extract_result, indent=4))
             res = self.request_parse(query, ['thought', 'number'])
             try:
-                return rule_list[eval(res['number'])]
+                # return rule_list[eval(res['number'])]
+                return rule_list[int(res['number'])]
             except:
                 return rule_list[0]
         else:

@@ -6,7 +6,7 @@ from module.stepback_crawler import StepbackCrawler
 from module.reflexion_crawler import AutoCrawler
 from module.prompt import *
 
-from utils.ms_api_copy import ms_chatgpt as chatgpt
+# from utils.ms_api_copy import ms_chatgpt as chatgpt
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -27,11 +27,24 @@ dataset = args.dataset
 num_seed_website = args.seed_website
 overwrite = args.overwrite
 
+# if model == 'GPT4':
+#     from utils.api import chatgpt
+#     from utils.ms_api_copy import ms_gpt4 as chatgpt
+# elif model == 'ChatGPT':
+#     from utils.ms_api_copy import ms_chatgpt as chatgpt
+
 if model == 'GPT4':
-    from utils.api import chatgpt
-    from utils.ms_api_copy import ms_gpt4 as chatgpt
-elif model == 'ChatGPT':
-    from utils.ms_api_copy import ms_chatgpt as chatgpt
+    from utils.api import gpt4 as chatgpt
+elif model == 'phi':
+    from utils.api import phi3_5 as chatgpt
+elif model == 'deepseek':
+    from utils.api import deepseek as chatgpt
+elif model == 'mixtral':
+    from utils.api import mixtral as chatgpt
+elif model == 'gemini':
+    from utils.api import gemini as chatgpt
+else:
+    raise ValueError('Model not supported.')
 
 if PATTERN == 'autocrawler':
     xe = StepbackCrawler(api=chatgpt)
@@ -43,14 +56,14 @@ else:
 if dataset == 'swde':
     from run_swde.task_prompt import swde_prompt as prompt
     SCHEMA = {
-        'auto': ['model', 'price', 'engine', 'fuel_economy'],
-        'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
-        'camera': ['model', 'price', 'manufacturer'],
-        'job': ['title', 'company', 'location', 'date_posted'],
+        # 'auto': ['model', 'price', 'engine', 'fuel_economy'],
+        # 'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
+        # 'camera': ['model', 'price', 'manufacturer'],
+        # 'job': ['title', 'company', 'location', 'date_posted'],
         'movie': ['title', 'director', 'genre', 'mpaa_rating'],
-        'nbaplayer': ['name', 'team', 'height', 'weight'],
-        'restaurant': ['name', 'address', 'phone', 'cuisine'],
-        'university': ['name', 'phone', 'website', 'type']
+        # 'nbaplayer': ['name', 'team', 'height', 'weight'],
+        # 'restaurant': ['name', 'address', 'phone', 'cuisine'],
+        # 'university': ['name', 'phone', 'website', 'type']
     }
     DATA_HOME = 'data/swde/sourceCode'
     # if model == 'ChatGPT':
@@ -91,9 +104,9 @@ else:
     OUTPUT_HOME = f'dataset/{dataset}/{model}/{PATTERN}'
 
 for field in SCHEMA.keys():
-    tmp_out = f'dataset/{dataset}/ChatGPT_2/{PATTERN}'
-    if not os.path.exists(os.path.join(tmp_out, field)):
-        os.makedirs(os.path.join(tmp_out, field))
+    # tmp_out = f'dataset/{dataset}/ChatGPT_2/{PATTERN}'
+    # if not os.path.exists(os.path.join(tmp_out, field)):
+    #     os.makedirs(os.path.join(tmp_out, field))
 
     if not os.path.exists(os.path.join(OUTPUT_HOME, field)):
         os.makedirs(os.path.join(OUTPUT_HOME, field))
@@ -121,8 +134,8 @@ for field in SCHEMA.keys():
         
         print(website_name)
 
-        if os.path.exists(os.path.join(tmp_out, field, website_name) + '.json') and (not overwrite):
-            continue
+        # if os.path.exists(os.path.join(tmp_out, field, website_name) + '.json') and (not overwrite):
+        #     continue
 
         if os.path.exists(os.path.join(OUTPUT_HOME, field, website_name) + '.json') and (not overwrite):
             continue
@@ -149,7 +162,8 @@ for field in SCHEMA.keys():
                 
                 new_res = {'page': web_index}
                 for item in SCHEMA[field]:
-                    item_value = extract(html, xpath_rule[item][0])
+                    # item_value = extract(html, xpath_rule[item][0])
+                    item_value = extract(html, xpath_rule[item])
                     new_res[item] = item_value
 
                     #print(item, item_value)
@@ -179,7 +193,7 @@ for field in SCHEMA.keys():
                     #print(item, item_value)
                 result_list.append(new_res)
 
-        with open(os.path.join(tmp_out, field, website_name) + '.json', 'w') as f:
-        # with open(os.path.join(OUTPUT_HOME, field, website_name) + '.json', 'w') as f:
+        # with open(os.path.join(tmp_out, field, website_name) + '.json', 'w') as f:
+        with open(os.path.join(OUTPUT_HOME, field, website_name) + '.json', 'w') as f:
             json.dump(result_list, f, indent=4)
     

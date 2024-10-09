@@ -158,7 +158,7 @@ class AutoCrawler:
 
                 if self.rule_pattern in ['reflexion']:
                     rule_list.append(self.reflexion_generate(res, instruction, html_content, ground_truth))
-                else:
+                else: # cot
                     rule_list.append(res['xpath'])
         else:
             query = f"{self.prompter.role_prompt}\n{self.prompter.crawler_prompt.format(instruction, html_content)}"

@@ -1,5 +1,6 @@
 import glob
 import json, os, sys
+import time
 from tqdm import tqdm
 from utils.html_utils import *
 from module.stepback_crawler import StepbackCrawler
@@ -32,18 +33,31 @@ else:
 
 print('max_token', max_token)
 
+# if model == 'GPT4':
+#     from utils.ms_api_copy import ms_gpt4 as chatgpt
+# elif model == 'ChatGPT':
+#     from utils.ms_api_copy import ms_chatgpt as chatgpt
+# elif model == 'Claude':
+#     from utils.claude3_api import claude_api as chatgpt
+# elif model == 'deepseek':
+#     from utils.custom_api import deepseek_33b_api as chatgpt
+# elif model == 'phi':
+#     from utils.custom_api import phi3_api as chatgpt
+# elif model == 'mixtral':
+#     from utils.custom_api import mixtral_87_api as chatgpt
+
 if model == 'GPT4':
-    from utils.ms_api_copy import ms_gpt4 as chatgpt
-elif model == 'ChatGPT':
-    from utils.ms_api_copy import ms_chatgpt as chatgpt
-elif model == 'Claude':
-    from utils.claude3_api import claude_api as chatgpt
-elif model == 'deepseek':
-    from utils.custom_api import deepseek_33b_api as chatgpt
+    from utils.api import gpt4 as chatgpt
 elif model == 'phi':
-    from utils.custom_api import phi3_api as chatgpt
+    from utils.api import phi3_5 as chatgpt
+elif model == 'deepseek':
+    from utils.api import deepseek as chatgpt
 elif model == 'mixtral':
-    from utils.custom_api import mixtral_87_api as chatgpt
+    from utils.api import mixtral as chatgpt
+elif model == 'gemini':
+    from utils.api import gemini as chatgpt
+else:
+    raise ValueError('Model not supported.')
 
 if PATTERN == 'autocrawler':
     xe = StepbackCrawler(api=chatgpt)
@@ -53,14 +67,14 @@ else:
 if dataset == 'swde':
     from run_swde.task_prompt import swde_prompt as prompt
     SCHEMA = {
-        'auto': ['model', 'price', 'engine', 'fuel_economy'],
-        'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
-        'camera': ['model', 'price', 'manufacturer'],
-        'job': ['title', 'company', 'location', 'date_posted'],
+        # 'auto': ['model', 'price', 'engine', 'fuel_economy'],
+        # 'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
+        # 'camera': ['model', 'price', 'manufacturer'],
+        # 'job': ['title', 'company', 'location', 'date_posted'],
         'movie': ['title', 'director', 'genre', 'mpaa_rating'],
-        'nbaplayer': ['name', 'team', 'height', 'weight'],
-        'restaurant': ['name', 'address', 'phone', 'cuisine'],
-        'university': ['name', 'phone', 'website', 'type']
+        # 'nbaplayer': ['name', 'team', 'height', 'weight'],
+        # 'restaurant': ['name', 'address', 'phone', 'cuisine'],
+        # 'university': ['name', 'phone', 'website', 'type']
     }
     DATA_HOME = 'data/swde/sourceCode'
 
@@ -209,5 +223,7 @@ for field in SCHEMA.keys():
                 
             xpath_rule[item] = xe.rule_synthesis(website_name, html_list, instruction, max_token=max_token)
             #xpath_rule[item] = xe.rule_synthesis_cul(website_name, html_list, instruction, max_token=max_token)
+
         with open(os.path.join(OUTPUT_HOME, PATTERN, field, website_name) + f'_{PATTERN}.json', 'w') as f:
             json.dump(xpath_rule, f, indent=4)
+        break
