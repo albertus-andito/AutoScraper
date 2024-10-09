@@ -59,7 +59,7 @@ def phi3_5(query):
 def deepseek(query):
     query_session = [{"role": "user", "content": query}]
     resp = ollama.chat(
-        model='deepseek-coder:33b',
+        model='deepseek-coder:33b-instruct-q4_K_M',
         messages=query_session,
     )
     return resp["message"]["content"]
