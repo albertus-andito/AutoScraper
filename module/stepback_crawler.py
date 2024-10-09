@@ -118,6 +118,7 @@ class StepbackCrawler:
         target = False
         for _ in range(self.error_max_times):
             response = self.api(query)
+            print(response)
             matches = re.findall(pattern, response, re.DOTALL)
             try:
                 for match in matches:
