@@ -226,4 +226,3 @@ for field in SCHEMA.keys():
 
         with open(os.path.join(OUTPUT_HOME, PATTERN, field, website_name) + f'_{PATTERN}.json', 'w') as f:
             json.dump(xpath_rule, f, indent=4)
-        break
