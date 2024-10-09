@@ -117,8 +117,12 @@ class StepbackCrawler:
         pattern = r'\{.*?\}'
         target = False
         for _ in range(self.error_max_times):
+            print("Query:")
+            print(query)
             response = self.api(query)
+            print("Response:")
             print(response)
+            print('-' * 50)
             matches = re.findall(pattern, response, re.DOTALL)
             try:
                 for match in matches:
