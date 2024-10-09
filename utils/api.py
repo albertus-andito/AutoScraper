@@ -70,7 +70,7 @@ def deepseek(query):
 def mixtral(query):
     query_session = [{"role": "user", "content": query}]
     resp = ollama.chat(
-        model='mixtral:8x7b',
+        model='mixtral:8x7b-instruct-v0.1-q6_K',
         messages=query_session,
         format='json'
     )
