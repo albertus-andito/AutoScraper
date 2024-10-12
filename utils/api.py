@@ -52,7 +52,7 @@ def phi3_5(query):
     resp = ollama.chat(
         model='phi3.5:3.8b',
         messages=query_session,
-        format='json'
+        # format='json'
     )
     return resp["message"]["content"]
 
@@ -62,7 +62,7 @@ def deepseek(query):
     resp = ollama.chat(
         model='deepseek-coder:33b-instruct-q8_0',
         messages=query_session,
-        format='json'
+        # format='json'
     )
     return resp["message"]["content"]
 
@@ -72,7 +72,7 @@ def mixtral(query):
     resp = ollama.chat(
         model='mixtral:8x7b-instruct-v0.1-q6_K',
         messages=query_session,
-        format='json'
+        # format='json'
     )
     return resp["message"]["content"]
 

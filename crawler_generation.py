@@ -67,14 +67,14 @@ else:
 if dataset == 'swde':
     from run_swde.task_prompt import swde_prompt as prompt
     SCHEMA = {
-        # 'auto': ['model', 'price', 'engine', 'fuel_economy'],
-        # 'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
-        # 'camera': ['model', 'price', 'manufacturer'],
-        # 'job': ['title', 'company', 'location', 'date_posted'],
+        'auto': ['model', 'price', 'engine', 'fuel_economy'],
+        'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
+        'camera': ['model', 'price', 'manufacturer'],
+        'job': ['title', 'company', 'location', 'date_posted'],
         'movie': ['title', 'director', 'genre', 'mpaa_rating'],
-        # 'nbaplayer': ['name', 'team', 'height', 'weight'],
-        # 'restaurant': ['name', 'address', 'phone', 'cuisine'],
-        # 'university': ['name', 'phone', 'website', 'type']
+        'nbaplayer': ['name', 'team', 'height', 'weight'],
+        'restaurant': ['name', 'address', 'phone', 'cuisine'],
+        'university': ['name', 'phone', 'website', 'type']
     }
     DATA_HOME = 'data/swde/sourceCode'
 
@@ -162,8 +162,6 @@ for field in SCHEMA.keys():
         print(website_name)
         print(os.path.join(OUTPUT_HOME, PATTERN, field, website_name) + f'_{PATTERN}.json')
         if (website_name in filter_website) or (not overwrite and os.path.exists(os.path.join(OUTPUT_HOME, PATTERN, field, website_name) + f'_{PATTERN}.json')):
-            continue
-        if website_name != "movie-yahoo":
             continue
 
         if dataset in ['swde', 'extended_swde', 'ds1']:
