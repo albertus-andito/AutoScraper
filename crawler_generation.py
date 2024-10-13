@@ -6,6 +6,10 @@ from utils.html_utils import *
 from module.stepback_crawler import StepbackCrawler
 from module.reflexion_crawler import AutoCrawler
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -117,9 +121,9 @@ elif dataset == 'klarna':
     DATA_HOME = 'data/klarna_product_page_dataset_WTL_50k/train/US'
 
 if args.save_name:
-    OUTPUT_HOME = f'dataset/{dataset}/{args.save_name}'
+    OUTPUT_HOME = f'{os.getenv("BASE_DIR")}/dataset/{dataset}/{args.save_name}'
 else:
-    OUTPUT_HOME = f'dataset/{dataset}/{model}'
+    OUTPUT_HOME = f'{os.getenv("BASE_DIR")}/dataset/{dataset}/{model}'
 
 def load_file(filename):
     result_dict = {}
