@@ -56,14 +56,14 @@ else:
 if dataset == 'swde':
     from run_swde.task_prompt import swde_prompt as prompt
     SCHEMA = {
-        # 'auto': ['model', 'price', 'engine', 'fuel_economy'],
-        # 'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
-        # 'camera': ['model', 'price', 'manufacturer'],
-        # 'job': ['title', 'company', 'location', 'date_posted'],
+        'auto': ['model', 'price', 'engine', 'fuel_economy'],
+        'book': ['title', 'author', 'isbn_13', 'publisher', 'publication_date'],
+        'camera': ['model', 'price', 'manufacturer'],
+        'job': ['title', 'company', 'location', 'date_posted'],
         'movie': ['title', 'director', 'genre', 'mpaa_rating'],
-        # 'nbaplayer': ['name', 'team', 'height', 'weight'],
-        # 'restaurant': ['name', 'address', 'phone', 'cuisine'],
-        # 'university': ['name', 'phone', 'website', 'type']
+        'nbaplayer': ['name', 'team', 'height', 'weight'],
+        'restaurant': ['name', 'address', 'phone', 'cuisine'],
+        'university': ['name', 'phone', 'website', 'type']
     }
     DATA_HOME = 'data/swde/sourceCode'
     # if model == 'ChatGPT':
@@ -145,7 +145,12 @@ for field in SCHEMA.keys():
         if not os.path.exists(os.path.join(OUTPUT_HOME, field, website_name) + f'_{PATTERN}.json'):
             continue
         with open(os.path.join(OUTPUT_HOME, field, website_name) + f'_{PATTERN}.json', 'r') as f:
-            xpath_rule = json.load(f)
+            if f.read().strip():
+                f.seek(0)
+                xpath_rule = json.load(f)
+            else:
+                print(f"Empty file: {os.path.join(OUTPUT_HOME, field, website_name) + f'_{PATTERN}.json'}")
+                continue
 
         # Rule execution
         result_list = []
