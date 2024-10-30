@@ -7,6 +7,10 @@ import os
 
 from dotenv import load_dotenv
 
+from openai import OpenAI
+from pydantic import BaseModel, Field
+import instructor
+
 load_dotenv()
 
 OPENAI_API_KEY=os.getenv('OPENAI_API_KEY')
@@ -67,13 +71,34 @@ def deepseek(query):
     return resp["message"]["content"]
 
 
+# class Answer(BaseModel):
+#     answer: str
+
 def mixtral(query):
     query_session = [{"role": "user", "content": query}]
+    options = ollama.Options(
+        f16_kv=False,
+        temperature=0.0,
+    )
     resp = ollama.chat(
         model='mixtral:8x7b-instruct-v0.1-fp16',
         messages=query_session,
         # format='json'
+        options=options
     )
+    # client = instructor.from_openai(
+    #     OpenAI(
+    #         base_url="http://localhost:11434/v1",
+    #         api_key="ollama",  # required, but unused
+    #     ),
+    #     mode=instructor.Mode.JSON,
+    # )
+    # resp = client.chat.completions.create(
+    #     model="llama3.2:latest",
+    #     messages=query_session,
+    #     response_model=Answer,
+    # )
+    # return resp
     return resp["message"]["content"]
 
 
