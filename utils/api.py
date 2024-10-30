@@ -8,8 +8,8 @@ import os
 from dotenv import load_dotenv
 
 from openai import OpenAI
-from pydantic import BaseModel, Field
-import instructor
+# from pydantic import BaseModel, Field
+# import instructor
 
 load_dotenv()
 
