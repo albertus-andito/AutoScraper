@@ -77,7 +77,7 @@ def deepseek(query):
 def mixtral(query):
     query_session = [{"role": "user", "content": query}]
     options = ollama.Options(
-        f16_kv=False,
+        # f16_kv=False,
         temperature=0.0,
     )
     resp = ollama.chat(
