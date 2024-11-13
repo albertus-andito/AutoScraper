@@ -19,7 +19,7 @@ parser.add_argument('--model', type=str, help='Backbone model')
 parser.add_argument('--dataset', type=str, choices=['swde','ds1','extended_swde', 'klarna'], help='Which dataset to test.')
 parser.add_argument('--seed_website', type=int)
 parser.add_argument('--save_name', type=str)
-parser.add_argument('--overwrite', type=bool, help='Whether overwrite the generated crawler.')
+parser.add_argument('--overwrite', type=bool, action=argparse.BooleanOptionalAction, help='Whether overwrite the generated crawler.')
 parser.add_argument('--max_token', type=int)
 
 args = parser.parse_args()
@@ -56,6 +56,8 @@ elif model == 'phi':
     from utils.api import phi3_5 as chatgpt
 elif model == 'deepseek':
     from utils.api import deepseek as chatgpt
+elif model == "qwen_coder":
+    from utils.api import qwen_coder as chatgpt
 elif model == 'mixtral':
     from utils.api import mixtral as chatgpt
 elif model == 'gemini':
