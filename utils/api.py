@@ -71,6 +71,16 @@ def deepseek(query):
     return resp["message"]["content"]
 
 
+def qwen_coder(query):
+    query_session = [{"role": "user", "content": query}]
+    resp = ollama.chat(
+        model='qwen2.5-coder:32b-instruct-fp16',
+        messages=query_session,
+        # format='json'
+    )
+    return resp["message"]["content"]
+
+
 # class Answer(BaseModel):
 #     answer: str
 
