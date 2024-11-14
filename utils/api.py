@@ -16,6 +16,11 @@ load_dotenv()
 OPENAI_API_KEY=os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=OPENAI_API_KEY)
 
+vllm_client = OpenAI(
+    api_key="EMPTY",
+    base_url="http://localhost:8000/v1",
+)
+
 GEMINI_API_KEY=os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-1.5-flash')
@@ -70,15 +75,98 @@ def deepseek(query):
     )
     return resp["message"]["content"]
 
+def get_json_schema(query):
+    if "the value extracted from the HTML that match the instruction, if there is no data, keep it blank" in query:
+        return {
+            "type": "object",
+            "properties": {
+                "thought": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "xpath": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "thought",
+                "xpath"
+            ]
+        }
+    elif "The element value" in query:
+        return {
+            "type": "object",
+            "properties": {
+                "thought": {
+                    "type": "string"
+                },
+                "xpath": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "thought",
+                "xpath"
+            ]
+        }
+    elif "judge whether the following HTML code contains all the expected value" or "judge whether the extracted value is consistent with the expected value" in query:
+        return {
+            "type": "object",
+            "properties": {
+                "thought": {
+                    "type": "string"
+                },
+                "judgement": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "thought",
+                "judgement",
+            ]
+        }
+    elif "the best action sequence choosen from the candidates" in query:
+        return {
+            "type": "object",
+            "properties": {
+                "thought": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "thought",
+                "number",
+            ]
+        }
+    else:
+        raise ValueError("No schema found for the query")
+
 
 def qwen_coder(query):
     query_session = [{"role": "user", "content": query}]
-    resp = ollama.chat(
+    json_schema = get_json_schema(query)
+
+    resp = vllm_client.chat.completions.create(
         model='qwen2.5-coder:32b-instruct-fp16',
         messages=query_session,
-        # format='json'
+        temperature=0.0,
+        extra_body={
+            "guided_json": json_schema
+        }
     )
-    return resp["message"]["content"]
+    return resp.choices[0].message.content
+
+    # resp = ollama.chat(
+    #     model='qwen2.5-coder:32b-instruct-fp16',
+    #     messages=query_session,
+    #     # format='json'
+    # )
+    # return resp["message"]["content"]
 
 
 # class Answer(BaseModel):
