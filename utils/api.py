@@ -111,7 +111,7 @@ def get_json_schema(query):
                 "xpath"
             ]
         }
-    elif "judge whether the following HTML code contains all the expected value" or "judge whether the extracted value is consistent with the expected value" in query:
+    elif "judge whether the following HTML code contains all the expected value" in query or "judge whether the extracted value is consistent with the expected value" in query:
         return {
             "type": "object",
             "properties": {
