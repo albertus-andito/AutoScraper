@@ -152,7 +152,7 @@ def qwen_coder(query):
     json_schema = get_json_schema(query)
 
     resp = vllm_client.chat.completions.create(
-        model='qwen2.5-coder:32b-instruct-fp16',
+        model='Qwen/Qwen2.5-Coder-32B-Instruct',
         messages=query_session,
         temperature=0.0,
         extra_body={
