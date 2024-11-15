@@ -174,16 +174,27 @@ def qwen_coder(query):
 
 def mixtral(query):
     query_session = [{"role": "user", "content": query}]
-    options = ollama.Options(
-        # f16_kv=False,
-        temperature=0.0,
-    )
-    resp = ollama.chat(
-        model='mixtral:8x7b-instruct-v0.1-fp16',
+    json_schema = get_json_schema(query)
+
+    resp = vllm_client.chat.completions.create(
+        model='TheBloke/Mixtral-8x7B-Instruct-v0.1-AWQ',
         messages=query_session,
-        # format='json'
-        options=options
+        temperature=0.0,
+        extra_body={
+            "guided_json": json_schema
+        }
     )
+    return resp.choices[0].message.content
+    # options = ollama.Options(
+    #     # f16_kv=False,
+    #     temperature=0.0,
+    # )
+    # resp = ollama.chat(
+    #     model='mixtral:8x7b-instruct-v0.1-fp16',
+    #     messages=query_session,
+    #     # format='json'
+    #     options=options
+    # )
     # client = instructor.from_openai(
     #     OpenAI(
     #         base_url="http://localhost:11434/v1",
